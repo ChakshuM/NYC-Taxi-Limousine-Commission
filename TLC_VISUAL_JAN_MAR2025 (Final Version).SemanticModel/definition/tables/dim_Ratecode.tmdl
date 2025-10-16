@@ -1,0 +1,35 @@
+table dim_Ratecode
+	lineageTag: 6c25f17a-2e3e-403b-83f5-a31aa4a7d720
+
+	column RatecodeID
+		dataType: int64
+		formatString: 0
+		lineageTag: cd35a08a-5556-407f-916c-610ac4444a25
+		summarizeBy: none
+		sourceColumn: RatecodeID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ratecode
+		dataType: string
+		lineageTag: 46ccf952-7289-4cf7-b289-e0ea09e68c47
+		summarizeBy: none
+		sourceColumn: Ratecode
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Ratecode = m
+		mode: import
+		queryGroup: 'Data (January to March)'
+		source =
+				let
+				    Source = Csv.Document(Web.Contents("https://humberital-my.sharepoint.com/personal/n01626493_humber_ca/Documents/Capstone/ratecode.csv"),[Delimiter=",", Columns=2, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"RatecodeID", Int64.Type}, {"Ratecode", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,34 @@
+relationship e88bf452-3110-498d-9e81-c6b955377571
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_YellowTripData2025.DropOffDate
+	toColumn: LocalDateTable_820588c7-56c8-4970-a4c5-8b785fc35abb.Date
+
+relationship AutoDetected_5854d0df-8a8c-4b66-a39e-30438c4c3e4e
+	fromColumn: fact_YellowTripData2025.DropOffLocationID
+	toColumn: dim_DropOffLocation.DropOffLocationID
+
+relationship 88ee5d04-f5c9-4bcc-9a14-e2154b0dc8f0
+	fromColumn: fact_YellowTripData2025.PickUpLocationID
+	toColumn: dim_PickUpLocation.PickUpLocationID
+
+relationship AutoDetected_8fb6feb1-6854-429e-8d9b-a5e3ef241f30
+	fromColumn: fact_YellowTripData2025.VendorID
+	toColumn: dim_Vendor.VendorID
+
+relationship AutoDetected_9515f066-177b-46a2-b6c7-4b717d0df66b
+	fromColumn: fact_YellowTripData2025.RatecodeID
+	toColumn: dim_Ratecode.RatecodeID
+
+relationship AutoDetected_014e9d28-8657-489f-9d6b-2eff054231c5
+	fromColumn: fact_YellowTripData2025.PaymentTypeID
+	toColumn: dim_PaymentType.PaymentTypeID
+
+relationship 54e5ae10-0ca9-4b4c-9fb7-f9ca9c4cc47d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_Calendar.Date
+	toColumn: LocalDateTable_e1994732-e1c4-4ced-acad-100eae0ab530.Date
+
+relationship 6b267ec6-a3f5-40d8-a236-a947c7a76f49
+	fromColumn: fact_YellowTripData2025.PickUpDate
+	toColumn: dim_Calendar.Date
+

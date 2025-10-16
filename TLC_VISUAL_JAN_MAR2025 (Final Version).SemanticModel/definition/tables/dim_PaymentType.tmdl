@@ -1,0 +1,36 @@
+table dim_PaymentType
+	lineageTag: d46f663a-3c33-4b11-af13-c47a951f0a12
+
+	column PaymentTypeID
+		dataType: int64
+		formatString: 0
+		lineageTag: f115a684-12d4-444c-874c-021420a5247a
+		summarizeBy: none
+		sourceColumn: PaymentTypeID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PaymentType
+		dataType: string
+		lineageTag: 840a09a6-1c31-46d0-8efc-8affa783735f
+		summarizeBy: none
+		sourceColumn: PaymentType
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_PaymentType = m
+		mode: import
+		queryGroup: 'Data (January to March)'
+		source =
+				let
+				    Source = Csv.Document(Web.Contents("https://humberital-my.sharepoint.com/personal/n01626493_humber_ca/Documents/Capstone/paymenttype.csv"),[Delimiter=",", Columns=2, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"PaymentTypeID", Int64.Type}, {"PaymentType", type text}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([PaymentType] <> "Unknown "))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

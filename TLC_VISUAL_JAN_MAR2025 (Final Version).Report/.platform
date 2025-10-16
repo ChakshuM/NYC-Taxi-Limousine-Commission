@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "TLC_VISUAL_JAN_MAR2025 (Final Version)"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "12019dcd-b5ee-4609-8786-1b72ae98f188"
+  }
+}

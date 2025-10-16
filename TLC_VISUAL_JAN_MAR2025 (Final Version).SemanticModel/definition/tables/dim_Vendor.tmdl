@@ -1,0 +1,35 @@
+table dim_Vendor
+	lineageTag: 5a3f9627-7fd6-494d-a3dc-0e7beee76697
+
+	column VendorID
+		dataType: int64
+		formatString: 0
+		lineageTag: beb23dce-b86e-494a-aef3-e96102e26a1c
+		summarizeBy: none
+		sourceColumn: VendorID
+
+		annotation SummarizationSetBy = Automatic
+
+	column VendorName
+		dataType: string
+		lineageTag: be47bebe-e172-48a5-b4ad-85768aea8bae
+		summarizeBy: none
+		sourceColumn: VendorName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Vendor = m
+		mode: import
+		queryGroup: 'Data (January to March)'
+		source =
+				let
+				    Source = Csv.Document(Web.Contents("https://humberital-my.sharepoint.com/personal/n01626493_humber_ca/Documents/Capstone/vendor.csv"),[Delimiter=",", Columns=2, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"VendorID", Int64.Type}, {"VendorName", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

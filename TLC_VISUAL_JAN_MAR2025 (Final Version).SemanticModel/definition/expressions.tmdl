@@ -1,0 +1,45 @@
+expression yellow_tripdata_2025-01 =
+		let
+		    Source = let
+		    Source = Binary.Buffer(Web.Contents("https://humberital-my.sharepoint.com/personal/n01626493_humber_ca/Documents/Capstone/yellow_tripdata_2025-01.parquet")),
+		    Output = Parquet.Document(Source)
+		in
+		    Output
+		in
+		    Source
+	lineageTag: aee49940-ee46-45c9-bbc1-65a0640f453a
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression yellow_tripdata_2025-02 =
+		let
+		    Source = let
+		    Source = Binary.Buffer(Web.Contents("https://humberital-my.sharepoint.com/personal/n01626493_humber_ca/Documents/Capstone/yellow_tripdata_2025-02.parquet")),
+		    Output = Parquet.Document(Source)
+		in
+		    Output
+		in
+		    Source
+	lineageTag: a1d09f9a-d10d-4dcc-8ac1-138b766827af
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression yellow_tripdata_2025-03 =
+		let
+		    Source = let
+		    Source = Binary.Buffer(Web.Contents("https://humberital-my.sharepoint.com/personal/n01626493_humber_ca/Documents/Capstone/yellow_tripdata_2025-03.parquet")),
+		    Output = Parquet.Document(Source)
+		in
+		    Output
+		in
+		    Source
+	lineageTag: b403f620-f526-40c4-a752-20423c875a37
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

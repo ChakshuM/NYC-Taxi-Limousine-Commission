@@ -1,0 +1,53 @@
+table dim_PickUpLocation
+	lineageTag: 6cdc7706-96c3-43d3-a68f-40f1ab4e5e7f
+
+	column PickUpLocationID
+		dataType: int64
+		formatString: 0
+		lineageTag: 4a21e301-a8b4-45e0-ba6d-6db581c272f3
+		summarizeBy: none
+		sourceColumn: PickUpLocationID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Borough
+		dataType: string
+		lineageTag: f8711b1e-633e-4be4-a666-c313bacf7754
+		summarizeBy: none
+		sourceColumn: Borough
+
+		annotation SummarizationSetBy = Automatic
+
+	column Zone
+		dataType: string
+		lineageTag: 62ca6c6c-fba5-430f-9d92-afe960197ea7
+		summarizeBy: none
+		sourceColumn: Zone
+
+		annotation SummarizationSetBy = Automatic
+
+	column ServiceZone
+		dataType: string
+		lineageTag: ccd70255-e052-49c4-92bb-c1ee950de583
+		summarizeBy: none
+		sourceColumn: ServiceZone
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_PickUpLocation = m
+		mode: import
+		queryGroup: 'Data (January to March)'
+		source =
+				let
+				    Source = Csv.Document(Web.Contents("https://humberital-my.sharepoint.com/personal/n01626493_humber_ca/Documents/Capstone/taxi_zone_lookup.csv"),[Delimiter=",", Columns=4, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"LocationID", Int64.Type}, {"Borough", type text}, {"Zone", type text}, {"service_zone", type text}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"service_zone", "ServiceZone"}, {"LocationID", "PickUpLocationID"}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each ([Borough] <> null and [Borough] <> "") and ([ServiceZone] <> "Unknown"))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

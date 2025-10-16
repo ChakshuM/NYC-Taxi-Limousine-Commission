@@ -1,0 +1,51 @@
+table dim_DropOffLocation
+	lineageTag: 06ac6718-3324-48f2-b11f-cb605db3ab0c
+
+	column DropOffLocationID
+		dataType: int64
+		formatString: 0
+		lineageTag: a510399d-828a-4b19-96d4-140cdb06256c
+		summarizeBy: none
+		sourceColumn: DropOffLocationID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Borough
+		dataType: string
+		lineageTag: e9009463-eec6-4b4d-9747-777bee47a456
+		summarizeBy: none
+		sourceColumn: Borough
+
+		annotation SummarizationSetBy = Automatic
+
+	column Zone
+		dataType: string
+		lineageTag: 0dbb1228-d424-4a54-89bc-3d24761dba88
+		summarizeBy: none
+		sourceColumn: Zone
+
+		annotation SummarizationSetBy = Automatic
+
+	column ServiceZone
+		dataType: string
+		lineageTag: c6df9344-a3d4-4cac-bd5e-2b3cf0692134
+		summarizeBy: none
+		sourceColumn: ServiceZone
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_DropOffLocation = m
+		mode: import
+		queryGroup: 'Data (January to March)'
+		source =
+				let
+				    Source = dim_PickUpLocation,
+				    #"Renamed Columns" = Table.RenameColumns(Source,{{"PickUpLocationID", "DropOffLocationID"}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each ([ServiceZone] <> "Unknown"))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

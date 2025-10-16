@@ -1,0 +1,529 @@
+table fact_YellowTripData2025
+	lineageTag: e5c2ea13-d5d5-40db-887a-852538c12049
+
+	measure 'Total Trip' = COUNTROWS(fact_YellowTripData2025)
+		formatString: #,0
+		lineageTag: fc0da621-1aca-4f32-8702-c4cd2d104823
+
+	measure '% Total Number of Trip' =
+			
+			DIVIDE(
+			    [Total Trip],
+			    CALCULATE(
+			        [Total Trip],
+			        REMOVEFILTERS(dim_Ratecode),
+			        REMOVEFILTERS(dim_PickUpLocation),
+			        REMOVEFILTERS(dim_DropOffLocation),
+			        REMOVEFILTERS(dim_Vendor),
+			        REMOVEFILTERS(dim_PaymentType),
+			        REMOVEFILTERS(fact_YellowTripData2025)
+			    )
+			)
+		formatString: 0.00000%;-0.00000%;0.00000%
+		lineageTag: fd916249-450e-4125-ad1a-62f7c4e06f7d
+
+	measure 'Avg BaseFare' = AVERAGE(fact_YellowTripData2025[BaseFare])
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 763b58f8-9d5d-45d5-9eee-f425b23a49ab
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Top Pickup' =
+			
+			CALCULATE (
+			    SELECTEDVALUE (dim_PickUpLocation[Zone]),
+			    TOPN (
+			        1,
+			        SUMMARIZE (
+			            fact_YellowTripData2025,
+			            dim_PickUpLocation[Zone],
+			            "Count", COUNTROWS(fact_YellowTripData2025)
+			        ),
+			        [Count], DESC
+			    )
+			)
+		lineageTag: ca16c93b-ec08-4367-a097-3e45d99a4aa9
+
+	measure 'Top DropOff' =
+			
+			CALCULATE (
+			    SELECTEDVALUE (dim_DropOffLocation[Zone]),
+			    TOPN (
+			        1,
+			        SUMMARIZE (
+			            fact_YellowTripData2025,
+			            dim_DropOffLocation[Zone],
+			            "Count", COUNTROWS(fact_YellowTripData2025)
+			        ),
+			        [Count], DESC
+			    )
+			)
+		lineageTag: 4c07d26d-26fc-411c-b180-6b1c94f5d8e5
+
+	measure 'Avg Amount' = AVERAGE(fact_YellowTripData2025[TotalAmount])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: facb29c5-46ea-4550-a641-b8a78e50e8aa
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure Avg_Passenger_Count =
+			
+			DIVIDE(
+			    SUM(fact_YellowTripData2025[PassengerCount]),
+			    COUNTROWS(fact_YellowTripData2025)
+			)
+		lineageTag: 7efdf9ec-ba3b-4583-9af6-fa25386445ed
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Pickups' =
+			
+			CALCULATE(
+			    COUNTROWS(fact_YellowTripData2025),
+			    USERELATIONSHIP(fact_YellowTripData2025[PickupLocationID], dim_PickUpLocation[PickupLocationID])
+			)
+		formatString: 0
+		lineageTag: 6c55cb44-361a-4774-9538-fa37447494de
+
+	measure 'Total Dropoffs' =
+			
+			CALCULATE(
+			    COUNTROWS(fact_YellowTripData2025),
+			    USERELATIONSHIP(fact_YellowTripData2025[DropOffLocationID], dim_DropOffLocation[DropOffLocationID])
+			)
+		formatString: 0
+		lineageTag: 2c3435df-e104-4999-9dc2-b8ab7c06cfac
+
+	measure Target_Threshold = 2851488
+		lineageTag: 3730f56e-571e-4916-9f29-2e14799ea5d8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Trips Per Zone' =
+			
+			AVERAGEX(
+			    VALUES(dim_PickUpLocation[Zone]),
+			    [Total Trip]
+			)
+		lineageTag: e50b0be3-03a2-491d-82ac-79480f45d207
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Demand Index' =
+			
+			DIVIDE([Total Trip], [Average Trips Per Zone], 0)
+		lineageTag: 34d8ec09-f695-43e9-9e8a-e2b25c2db8a8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Longest Trip Duration (HOURS)' =
+			
+			MAXX(
+			    fact_YellowTripData2025,
+			    DATEDIFF(
+			        fact_YellowTripData2025[PickupTime],
+			        fact_YellowTripData2025[DropoffTime],
+			        HOUR
+			    )
+			)
+		formatString: 0
+		lineageTag: 23e3458e-d12c-4213-bb54-6c08ae110777
+
+	measure 'Most Popular Payment Method' =
+			
+			CALCULATE (
+			    SELECTEDVALUE (dim_PaymentType[PaymentType]),
+			    TOPN (
+			        1,
+			        SUMMARIZE (
+			            fact_YellowTripData2025,
+			            dim_PaymentType[PaymentType],
+			            "Count", COUNTROWS(fact_YellowTripData2025)
+			        ),
+			        [Count], DESC
+			    )
+			)
+		lineageTag: bda89cdc-011e-40d1-a896-bd79d9c03362
+
+	measure 'Payment Type for Longest Trip' =
+			
+			VAR LongestTrip =
+			    MAX(fact_YellowTripData2025[TripDistance])
+			VAR FilteredTable =
+			    FILTER(
+			        fact_YellowTripData2025,
+			        fact_YellowTripData2025[TripDistance] = LongestTrip
+			    )
+			RETURN
+			    MAXX(FilteredTable, [Most Popular Payment Method])
+		lineageTag: ce5edc62-671a-4ebb-8ccc-992ef4585101
+
+	measure 'Credit Card Trips' =
+			
+			CALCULATE(
+			    COUNT('fact_YellowTripData2025'[PaymentTypeID]),
+			    'fact_YellowTripData2025'[PaymentTypeID] = 1
+			)
+		formatString: 0
+		lineageTag: e4e67268-904f-46c2-aca5-039e66c1ef10
+
+	measure 'Cash Trips' =
+			
+			CALCULATE(
+			    COUNT('fact_YellowTripData2025'[PaymentTypeID]),
+			    'fact_YellowTripData2025'[PaymentTypeID] = 2
+			)
+		formatString: 0
+		lineageTag: b822223f-d9fa-483d-99ab-260c709521d2
+
+	measure 'Credit Card Share' = ```
+			
+			VAR Result = 
+			    DIVIDE(
+			        [Credit Card Trips],
+			        [Total Trip],
+			        BLANK()
+			    )
+			RETURN     
+			    IF(ISBLANK(Result), "0", Result)
+			```
+		lineageTag: 27db9ae4-3fa3-43b6-867c-e5d2e58cc415
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Cash Share' = ```
+			
+			VAR Result = 
+			    DIVIDE(
+			        [Cash Trips],
+			        [Total Trip],
+			        BLANK()
+			    )
+			RETURN     
+			    IF(ISBLANK(Result), "0", Result)
+			```
+		lineageTag: 974df0d4-b70d-4d28-bb8a-84c0c80d7488
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Dispute Trips' = ```
+			
+			VAR Result = 
+			    CALCULATE(
+			        COUNT('fact_YellowTripData2025'[PaymentTypeID]),
+			        'fact_YellowTripData2025'[PaymentTypeID] = 4
+			    )
+			RETURN     
+			    IF(ISBLANK(Result), "0", Result)
+			```
+		lineageTag: ff437988-cdff-4c15-9030-4c64676c8ba3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Trip Distance' = AVERAGE('fact_YellowTripData2025'[TripDistance])
+		lineageTag: 5a67b31c-235b-46a4-8102-81d5e9c1c991
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Longest Trip Distance' = MAX('fact_YellowTripData2025'[TripDistance])
+		lineageTag: 0fdab257-7e77-471c-9a0d-96136ae13b54
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Shortest Trip Distance' =
+			
+			CALCULATE(
+			    MIN('fact_YellowTripData2025'[TripDistance]),
+			    'fact_YellowTripData2025'[TripDistance] >= 1
+			)
+		lineageTag: 8d323f90-9699-474a-a28a-05dc2b71bf58
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Top Ratecode' =
+			
+			CALCULATE (
+			    SELECTEDVALUE (dim_Ratecode[Ratecode]),
+			    TOPN (
+			        1,
+			        SUMMARIZE (
+			            fact_YellowTripData2025,
+			            dim_Ratecode[Ratecode],
+			            "RateCount", COUNTROWS(fact_YellowTripData2025)
+			        ),
+			        [RateCount], DESC
+			    )
+			)
+		lineageTag: eb0fa603-09be-40ee-afa6-1cfe3a00ef0e
+
+	measure 'Busiest Time of Day' =
+			
+			CALCULATE (
+			    SELECTEDVALUE (fact_YellowTripData2025[PickUpTime (Hour)]),
+			    TOPN (
+			        1,
+			        SUMMARIZE (
+			            fact_YellowTripData2025,
+			            fact_YellowTripData2025[PickUpTime (Hour)],
+			            "Count", COUNTROWS(fact_YellowTripData2025)
+			        ),
+			        [Count], DESC
+			    )
+			)
+		formatString: 0
+		lineageTag: 3135b6d0-7ca6-42c2-83a9-98b305a5d64c
+
+	measure 'Busiest Day of Week' =
+			
+			CALCULATE (
+			    SELECTEDVALUE (dim_Calendar[Week]),
+			    TOPN (
+			        1,
+			        SUMMARIZE (
+			            fact_YellowTripData2025,
+			            dim_Calendar[Week],
+			            "Count", COUNTROWS(fact_YellowTripData2025)
+			        ),
+			        [Count], DESC
+			    )
+			)
+		lineageTag: fc986c8c-a230-4974-bad3-ae2f096e9466
+
+	measure PreviousMonth_TotalTrips =
+			
+			CALCULATE(
+			    COUNT(fact_YellowTripData2025[TripDistance]),  -- or SUM if you have a measure for total trips
+			    DATEADD(dim_Calendar[Date], -1, MONTH)
+			)
+		lineageTag: 0ffe787c-9666-4920-9fce-546c075b8c47
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column VendorID
+		dataType: int64
+		formatString: 0
+		lineageTag: 584e2103-92c2-4836-a557-e6f70653ecc4
+		summarizeBy: none
+		sourceColumn: VendorID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PickUpDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 1ce366bd-4430-4dbd-afae-dc8b791c2506
+		summarizeBy: none
+		sourceColumn: PickUpDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column DropOffDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: fce60384-f7a8-4fc7-b0ab-24a368c925d7
+		summarizeBy: none
+		sourceColumn: DropOffDate
+
+		variation Variation
+			isDefault
+			relationship: e88bf452-3110-498d-9e81-c6b955377571
+			defaultHierarchy: LocalDateTable_820588c7-56c8-4970-a4c5-8b785fc35abb.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column PassengerCount
+		dataType: int64
+		formatString: #,0
+		lineageTag: 57b6a0fc-40c5-4a15-8903-91da7357b2e8
+		summarizeBy: sum
+		sourceColumn: PassengerCount
+
+		annotation SummarizationSetBy = Automatic
+
+	column TripDistance
+		dataType: double
+		lineageTag: 9c8c26d2-6b8e-48de-984d-89ed7a866b22
+		summarizeBy: sum
+		sourceColumn: TripDistance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RatecodeID
+		dataType: int64
+		formatString: 0
+		lineageTag: 2af51f44-1e14-40b2-8ab9-7246be73eb40
+		summarizeBy: none
+		sourceColumn: RatecodeID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PickUpLocationID
+		dataType: int64
+		formatString: 0
+		lineageTag: 25207e97-708b-4fcd-b609-b837ff899558
+		summarizeBy: none
+		sourceColumn: PickUpLocationID
+
+		annotation SummarizationSetBy = Automatic
+
+	column DropOffLocationID
+		dataType: int64
+		formatString: 0
+		lineageTag: 745608c1-99a3-411e-a50e-0ea660c9fd08
+		summarizeBy: none
+		sourceColumn: DropOffLocationID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PaymentTypeID
+		dataType: int64
+		formatString: 0
+		lineageTag: 462ca239-3ed0-4bd8-9027-62e5f3b4a47d
+		summarizeBy: none
+		sourceColumn: PaymentTypeID
+
+		annotation SummarizationSetBy = Automatic
+
+	column BaseFare
+		dataType: decimal
+		lineageTag: 13608e0a-dc85-4fcf-9b9c-4d4e8c6a4d95
+		summarizeBy: sum
+		sourceColumn: BaseFare
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TotalAmount
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 1e121b2b-def1-41b2-a515-282febb315a1
+		summarizeBy: sum
+		sourceColumn: TotalAmount
+
+		annotation SummarizationSetBy = Automatic
+
+	column PickUpTime
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 63e90375-0af4-48ff-b775-a634026676b6
+		summarizeBy: none
+		sourceColumn: PickUpTime
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column DropOffTime
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: ec95504e-bd29-4ba1-8e56-2e06ba68a1a0
+		summarizeBy: none
+		sourceColumn: DropOffTime
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column OtherCharges
+		dataType: decimal
+		lineageTag: 0ab17816-d0e6-4fb0-bf09-0dfd54309661
+		summarizeBy: sum
+		sourceColumn: OtherCharges
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TripDuration
+		dataType: string
+		lineageTag: 8f9a5422-6899-4ee0-892e-906a2d13ceaa
+		summarizeBy: none
+		sourceColumn: TripDuration
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PickUpTime (Hour)' =
+			
+			HOUR(fact_YellowTripData2025[PickUpTime])
+		formatString: 0
+		lineageTag: 1694695b-5fda-4608-a21c-b86f5d8d2108
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DropOffTime (Hour)' =
+			
+			HOUR(fact_YellowTripData2025[DropOffTime])
+		formatString: 0
+		lineageTag: 2b3f8274-1441-459c-b62c-089af5bc3c60
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column TimeOfDay =
+			
+			SWITCH(
+			    TRUE(),
+			    'fact_YellowTripData2025'[PickUpTime (Hour)] >= 6 && 'fact_YellowTripData2025'[PickUpTime (Hour)] < 12, "Morning",
+			    'fact_YellowTripData2025'[PickUpTime (Hour)] >= 12 && 'fact_YellowTripData2025'[PickUpTime (Hour)] < 17, "Afternoon",
+			    'fact_YellowTripData2025'[PickUpTime (Hour)] >= 18 && 'fact_YellowTripData2025'[PickUpTime (Hour)] < 21, "Evening",
+			    "Midnight"
+			)
+		lineageTag: fd7e9910-ca82-476d-b4d3-8db1ee217d27
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_YellowTripData2025 = m
+		mode: import
+		queryGroup: 'Data (January to March)'
+		source = ```
+				let
+				    Source = Table.Combine({#"yellow_tripdata_2025-01", #"yellow_tripdata_2025-02", #"yellow_tripdata_2025-03"}),
+				    #"Renamed Columns" = Table.RenameColumns(Source,{{"passenger_count", "PassengerCount"},{"trip_distance", "TripDistance"}, {"PULocationID", "PickUpLocationID"},
+				{"DOLocationID", "DropOffLocationID"}, {"payment_type", "PaymentType"}, {"fare_amount", "BaseFare"}, {"extra", "Extra"}, 
+				{"mta_tax", "MTA_Tax"}, {"tip_amount", "TipAmount"}, {"tolls_amount", "TollsAmount"}, {"improvement_surcharge", "ImprovementSurcharge"},
+				{"total_amount", "TotalAmount"}, {"congestion_surcharge", "CongestionSurcharge"}, {"Airport_fee", "AirportFee"}, 
+				{"cbd_congestion_fee", "CBDCongestionFee"}, {"store_and_fwd_flag", "StoreAndForwardFlag"}, {"tpep_pickup_datetime", "PickUpDate"}, 
+				{"tpep_dropoff_datetime", "DropOffDate"}
+				}),
+				    #"Inserted PickUp Time" = Table.AddColumn(#"Renamed Columns", "PickUpTime", each DateTime.Time([PickUpDate]), type time),
+				    #"Inserted DropOff Time" = Table.AddColumn(#"Inserted PickUp Time", "DropOffTime", each DateTime.Time([DropOffDate]), type time),
+				    #"Extracted Date of PU and DO" = Table.TransformColumns(#"Inserted DropOff Time",{{"PickUpDate", DateTime.Date, type date}, {"DropOffDate", DateTime.Date, type date}}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Extracted Date of PU and DO",{"VendorID", "PickUpDate",  "PickUpTime", "DropOffDate","DropOffTime","PassengerCount", "TripDistance", "RatecodeID", "StoreAndForwardFlag", "PickUpLocationID", "DropOffLocationID", "PaymentType", "BaseFare", "Extra", "MTA_Tax", "TipAmount", "TollsAmount", "ImprovementSurcharge", "TotalAmount", "CongestionSurcharge", "AirportFee", "CBDCongestionFee"}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Reordered Columns",{"StoreAndForwardFlag"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Removed Columns", each [BaseFare] > 0 and [Extra] >= 0),
+				    #"Filtered RateCodeID" = Table.SelectRows(#"Filtered Rows", each [RatecodeID] <> null and [RatecodeID] <> 99),
+				    #"Added Custom" = Table.AddColumn(#"Filtered RateCodeID", "OtherCharges", each [CBDCongestionFee]+[AirportFee]+[CongestionSurcharge]+[ImprovementSurcharge]+[TollsAmount]+[TipAmount]+[MTA_Tax]+[Extra]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Added Custom",{{"OtherCharges", type number}}),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Changed Type",{"CongestionSurcharge", "AirportFee", "CBDCongestionFee", "TollsAmount", "ImprovementSurcharge", "MTA_Tax", "TipAmount", "Extra"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Columns1",{{"BaseFare", Currency.Type}, {"TotalAmount", Currency.Type}, {"OtherCharges", Currency.Type}}),
+				    #"Rounded Off" = Table.TransformColumns(#"Changed Type1",{{"BaseFare", each Number.Round(_, 2), Currency.Type}, {"TotalAmount", each Number.Round(_, 2), Currency.Type}, {"OtherCharges", each Number.Round(_, 2), Currency.Type}}),
+				    #"Added Custom1" = Table.AddColumn(#"Rounded Off", "IsWeekend", each if Date.DayOfWeekName([PickUpDate]) = "Saturday" or Date.DayOfWeekName([PickUpDate]) = "Sunday" then "Yes" else "No"),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Added Custom1",{{"IsWeekend", type text}}),
+				    #"Filtered PickUpDate" = Table.SelectRows(#"Changed Type2", each [PickUpDate] > #date(2024, 12, 31) and [PickUpDate] < #date(2025, 4, 1)),
+				    #"Filtered Rows1" = Table.SelectRows(#"Filtered PickUpDate", each ([PassengerCount] <> 0)),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Filtered Rows1",{{"PaymentType", "PaymentTypeID"}}),
+				    #"Added Custom2" = Table.AddColumn(#"Renamed Columns1", "TripDuration", each if Duration.Hours([DropOffTime] - [PickUpTime]) = 0 then
+				    Text.From(Number.Mod(Duration.Minutes([DropOffTime] - [PickUpTime]), 60)) & " min"
+				else
+				    Text.From(Duration.Hours([DropOffTime] - [PickUpTime])) & " hr " &
+				    Text.From(Number.Mod(Duration.Minutes([DropOffTime] - [PickUpTime]), 60)) & " min"),
+				    #"Changed Type3" = Table.TransformColumnTypes(#"Added Custom2",{{"TripDuration", type text}}),
+				    #"Removed Columns2" = Table.RemoveColumns(#"Changed Type3",{"IsWeekend"}),
+				    #"Filtered Rows2" = Table.SelectRows(#"Removed Columns2", each [TotalAmount] <> 863380.37)
+				in
+				    #"Filtered Rows2"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

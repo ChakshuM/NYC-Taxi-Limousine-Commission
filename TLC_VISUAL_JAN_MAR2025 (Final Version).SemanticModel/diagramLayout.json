@@ -1,0 +1,111 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 622.5,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 319,
+            "y": 2
+          },
+          "nodeIndex": "dim_Vendor",
+          "nodeLineageTag": "5a3f9627-7fd6-494d-a3dc-0e7beee76697",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 672,
+            "y": 391.33332824707031
+          },
+          "nodeIndex": "dim_PaymentType",
+          "nodeLineageTag": "d46f663a-3c33-4b11-af13-c47a951f0a12",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 308,
+            "y": 277
+          },
+          "nodeIndex": "dim_PickUpLocation",
+          "nodeLineageTag": "6cdc7706-96c3-43d3-a68f-40f1ab4e5e7f",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 1096,
+            "y": 0
+          },
+          "nodeIndex": "dim_DropOffLocation",
+          "nodeLineageTag": "06ac6718-3324-48f2-b11f-cb605db3ab0c",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1038,
+            "y": 242.66666412353516
+          },
+          "nodeIndex": "dim_Ratecode",
+          "nodeLineageTag": "6c25f17a-2e3e-403b-83f5-a31aa4a7d720",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 726,
+            "y": 0
+          },
+          "nodeIndex": "fact_YellowTripData2025",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1017,
+            "y": 401.66666412353516
+          },
+          "nodeIndex": "dim_Calendar",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 44.53125,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}
