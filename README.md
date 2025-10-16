@@ -18,6 +18,8 @@ Through **Power BI dashboards**, it delivers actionable intelligence to support 
 9. [Key Reports & Insights](#key-reports--insights)
 10. [Testing & Validation](#testing--validation)
 11. [References](#references)
+12. [Power BI Data Flow](#power-bi-data-flow)
+13. [Demo](#demo)
 
 ---
 
@@ -203,4 +205,42 @@ The interface features interactive filters, maps, and KPIs for intuitive analysi
 ---
 
 ## References
-- NYC Taxi & Limousine Commission. (n.d.). *TLC Trip Record Data*. [nyc.gov](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)  
+- NYC Taxi & Limousine Commission. (n.d.). *TLC Trip Record Data*. [nyc.gov](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
+
+
+---
+
+## Power BI Data Flow
+**Power BI Data Flow**
+
+<img width="1104" height="664" alt="image" src="https://github.com/user-attachments/assets/cbadc821-ef79-4eb5-9054-01f4c2167d3e" />
+
+
+
+---
+
+## Demo
+**Demo:**
+- Executive Summary
+  <img width="1224" height="625" alt="image" src="https://github.com/user-attachments/assets/adf4cca5-194d-4bb2-83f0-ce589ec2cc60" />
+
+- Peak Demand Analysis
+  <img width="1142" height="584" alt="image" src="https://github.com/user-attachments/assets/41e29398-1f32-4e9a-a20b-d8ebfa132a69" />
+
+- Deman Zone Analysis
+  <img width="1127" height="584" alt="image" src="https://github.com/user-attachments/assets/7e3feb63-cacb-416a-a161-17377199c97d" />
+
+- Passenger Load Analysis
+  <img width="1139" height="584" alt="image" src="https://github.com/user-attachments/assets/a943b8a3-8f25-40ba-86d7-c4bd84153e1d" />
+
+- Fare & Distance Analysis
+  <img width="1140" height="586" alt="image" src="https://github.com/user-attachments/assets/8ebd17e4-7be8-4cce-8da3-abb5b91f6a3a" />
+
+- Payment Method Analysis
+  <img width="1156" height="584" alt="image" src="https://github.com/user-attachments/assets/c24d0899-5f95-4b33-ac8f-c066a28f1e13" />
+
+- Rate Type Analysis
+  <img width="1149" height="584" alt="image" src="https://github.com/user-attachments/assets/57239af2-02fa-4269-a3fc-dbdc5a45ab85" />
+
+
+
