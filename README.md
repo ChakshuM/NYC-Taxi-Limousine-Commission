@@ -222,8 +222,10 @@ The interface features interactive filters, maps, and KPIs for intuitive analysi
 ## Demo
 **Demo:**
 - Executive Summary
-  <img width="1224" height="625" alt="image" src="https://github.com/user-attachments/assets/adf4cca5-194d-4bb2-83f0-ce589ec2cc60" />
-
+  <p align="center">
+  <img src="https://github.com/user-attachments/assets/adf4cca5-194d-4bb2-83f0-ce589ec2cc60" alt="NYC Taxi Dashboard Executive Summary" width="800">
+  </p>
+  
 - Peak Demand Analysis
   <img width="1142" height="584" alt="image" src="https://github.com/user-attachments/assets/41e29398-1f32-4e9a-a20b-d8ebfa132a69" />
 
