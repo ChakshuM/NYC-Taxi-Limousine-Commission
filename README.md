@@ -17,8 +17,7 @@ Through **Power BI dashboards**, it delivers actionable intelligence to support 
 8. [Dashboard Design](#dashboard-design)
 9. [Key Reports & Insights](#key-reports--insights)
 10. [Testing & Validation](#testing--validation)
-11. [Optimization & Future Enhancements](#optimization--future-enhancements)
-12. [References](#references)
+11. [References](#references)
 
 ---
 
@@ -200,18 +199,6 @@ The interface features interactive filters, maps, and KPIs for intuitive analysi
 **Limitations:**
 - No integration with real-time or external (weather/event) data.  
 - Descriptive analytics only (no predictive modeling).
-
----
-
-## Optimization & Future Enhancements
-To improve performance and analytical depth:
-- Integrate **weather, traffic, and event data** for contextual insights.  
-- Implement **incremental refresh** and **summary tables** to boost speed.  
-- Add **predictive modeling** for demand forecasting.  
-- Develop **mobile-responsive dashboards** for on-the-go access.  
-- Enable **real-time data streaming** from TLC APIs.
-
-These enhancements will improve decision accuracy, reduce idle driver time, and increase customer satisfaction.
 
 ---
 
