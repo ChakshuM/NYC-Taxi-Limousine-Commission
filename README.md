@@ -222,27 +222,31 @@ The interface features interactive filters, maps, and KPIs for intuitive analysi
 ## Demo
 **Demo:**
 - Executive Summary
-  <p align="center">
-  <img src="https://github.com/user-attachments/assets/adf4cca5-194d-4bb2-83f0-ce589ec2cc60" alt="NYC Taxi Dashboard Executive Summary" width="800">
-  </p>
+  ![Executive Summary](https://github.com/user-attachments/assets/a7faf5d0-7ff7-4efb-818e-1fe9bf63aba2)
+
   
 - Peak Demand Analysis
-  <img width="1142" height="584" alt="image" src="https://github.com/user-attachments/assets/41e29398-1f32-4e9a-a20b-d8ebfa132a69" />
+  ![Peak Demand](https://github.com/user-attachments/assets/7388f32a-55d9-4609-bb6b-22c4e4ebf38c)
 
-- Deman Zone Analysis
-  <img width="1127" height="584" alt="image" src="https://github.com/user-attachments/assets/7e3feb63-cacb-416a-a161-17377199c97d" />
+
+- Demand Zone Analysis
+  ![Demand Zones](https://github.com/user-attachments/assets/fbdd6296-7818-4070-a30d-ea4d66e9325d)
+
 
 - Passenger Load Analysis
-  <img width="1139" height="584" alt="image" src="https://github.com/user-attachments/assets/a943b8a3-8f25-40ba-86d7-c4bd84153e1d" />
+  ![Passenger Load](https://github.com/user-attachments/assets/992165cf-6352-4987-9457-612877f89e4b)
+
 
 - Fare & Distance Analysis
-  <img width="1140" height="586" alt="image" src="https://github.com/user-attachments/assets/8ebd17e4-7be8-4cce-8da3-abb5b91f6a3a" />
+  ![Fare and Distance Trends](https://github.com/user-attachments/assets/147c5f4e-e868-4acf-a9d1-d0a5b9c2dc31)
 
 - Payment Method Analysis
-  <img width="1156" height="584" alt="image" src="https://github.com/user-attachments/assets/c24d0899-5f95-4b33-ac8f-c066a28f1e13" />
+  ![Payment Method Distribution](https://github.com/user-attachments/assets/90fa06fe-a166-4382-ac39-0159bb84f797)
+
 
 - Rate Type Analysis
-  <img width="1149" height="584" alt="image" src="https://github.com/user-attachments/assets/57239af2-02fa-4269-a3fc-dbdc5a45ab85" />
+  ![Rate Type](https://github.com/user-attachments/assets/6973ef6f-2a25-4b62-a8ed-eec0a7fcc91d)
+
 
 
 
